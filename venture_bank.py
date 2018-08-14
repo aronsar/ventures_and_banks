@@ -10,7 +10,7 @@ from copy import deepcopy
 
 deck_size = 25
 num_simulations = 10000
-venture_bank_combinations = [[10,0], [10,1], [10,2], [10,3], [10,4]]
+venture_bank_combinations = [[10,0], [10,1], [10,2], [10,3], [10,4], [10,5], [10,6], [10,7], [10, 8], [10, 9], [10, 10]]
 
 # FIXME: these variables should really not be global, I just suck at Python
 total_money = 0
@@ -23,6 +23,7 @@ class Deck:
     self.cards += num_ventures * [Card('venture')]
     self.cards += num_banks * [Card('bank')]
     num_other = deck_size - num_ventures - num_banks
+    #num_other = 5
     self.cards += num_other * [Card('other')]
     
   def shuffle(self):
@@ -35,7 +36,6 @@ class Deck:
       try:
         cards_drawn.append(self.cards.pop(0))
       except IndexError: # deck has run out of cards
-        self.clean_up()
         return [Card('deck_empty')]
         
     return cards_drawn
@@ -46,7 +46,9 @@ class Deck:
     money_so_far += 1
     card_drawn = self.draw(1)[0]
     
-    while not card_drawn.is_treasure() and not card_drawn.deck_empty():
+    # keep drawing cards as long as there are cards in the deck and
+    # the card you draw is not a treasure
+    while not card_drawn.deck_empty() and not card_drawn.is_treasure():
       card_drawn = self.draw(1)[0]
       
     if card_drawn == Card('venture'):
@@ -113,6 +115,8 @@ def main():
   global total_money, treasures_played_so_far, money_so_far
   
   print("Deck size is: %d" % deck_size)
+  print("Number of simulations: %d" % num_simulations)
+  
   #import pdb; pdb.set_trace()
   for [num_ventures, num_banks] in venture_bank_combinations:
     total_money = 0
